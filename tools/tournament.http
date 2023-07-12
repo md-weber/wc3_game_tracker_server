@@ -1,1 +1,1 @@
-GET {{protocol}}{{host}}:{{port}}/tournaments
+GET {{protocol}}{{host}}:{{port}}/api/v1/tournaments
