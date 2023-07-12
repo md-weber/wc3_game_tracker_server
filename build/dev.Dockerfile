@@ -6,3 +6,4 @@ RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh 
 
 WORKDIR /opt/app/api
 CMD ["air"]
+
