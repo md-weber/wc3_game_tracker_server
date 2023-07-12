@@ -3,7 +3,7 @@ FROM golang:1.20 as base
 FROM base as built
 
 WORKDIR /go/app/wc3_game_tracker
-COPY .. .
+COPY . .
 
 ENV CGO_ENABLED=0
 
