@@ -1,30 +1,44 @@
 package api
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"io"
+	"log"
 	"net/http"
-	"time"
+	"wc3_game_tracker/api/models"
+	"wc3_game_tracker/repo"
 )
 
-type Tournament struct {
-	Id        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
-	StartDate time.Time `json:"start_date"`
-	EndDate   time.Time `json:"end_date"`
-}
-
-var tournaments = []Tournament{
-	{Id: uuid.New(), Name: "Creepcamp League", StartDate: time.Now(), EndDate: time.Now().AddDate(0, 0, 3)},
-	{Id: uuid.New(), Name: "League 1", StartDate: time.Now(), EndDate: time.Now().AddDate(0, 0, 4)},
-	{Id: uuid.New(), Name: "League 2", StartDate: time.Now(), EndDate: time.Now().AddDate(0, 0, 5)},
-}
-
 func allTournamentsHandler(context *gin.Context) {
-	// Get all tournaments and return to client
-	context.IndentedJSON(http.StatusOK, tournaments)
+	// context.IndentedJSON(http.StatusOK, tournaments)
+	// TODO: Return the tournaments directly from the Database
+}
+
+func createNewTournamentHandler(context *gin.Context) {
+	var testTournament *models.Tournament
+
+	jsonData, err := io.ReadAll(context.Request.Body)
+	if err != nil {
+		context.AbortWithStatus(http.StatusBadRequest)
+		log.Fatal("We cannot read the request body")
+	}
+	err1 := json.Unmarshal(jsonData, &testTournament)
+	if err1 != nil {
+		context.AbortWithStatus(http.StatusBadRequest)
+		log.Fatal("We cannot unmarshall the jsonData", err1)
+	}
+
+	// TODO: Make sure that all relevant fields are correct else throw error
+	storedTournament := repo.SaveTournament(testTournament)
+	if storedTournament == nil {
+		context.AbortWithStatus(http.StatusInternalServerError)
+	}
+
+	context.JSON(http.StatusOK, storedTournament.Id)
 }
 
 func RegisterTournamentEndpoints(router *gin.RouterGroup) {
 	router.GET("/tournaments", allTournamentsHandler)
+	router.PUT("/tournament", createNewTournamentHandler)
 }
