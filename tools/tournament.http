@@ -1,1 +1,14 @@
 GET {{protocol}}{{host}}:{{port}}/api/v1/tournaments
+
+###
+
+PUT {{protocol}}{{host}}:{{port}}/api/v1/tournament
+Content-Type: application/json
+
+{
+  "name": "Test Tournament",
+  "startDate": "2023-07-17T07:45:42.914Z",
+  "endDate": "2023-07-25T07:45:42.914Z",
+  "type": "No Type",
+  "maxParticipants": 6
+}
