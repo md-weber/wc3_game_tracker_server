@@ -11,8 +11,11 @@ import (
 )
 
 func allTournamentsHandler(context *gin.Context) {
-	// context.IndentedJSON(http.StatusOK, tournaments)
-	// TODO: Return the tournaments directly from the Database
+	tournaments, err := repo.GetAllTournaments()
+	if err != nil {
+		context.JSON(http.StatusBadRequest, err)
+	}
+	context.JSON(http.StatusOK, tournaments)
 }
 
 func createNewTournamentHandler(context *gin.Context) {
@@ -29,7 +32,6 @@ func createNewTournamentHandler(context *gin.Context) {
 		log.Fatal("We cannot unmarshall the jsonData", err1)
 	}
 
-	// TODO: Make sure that all relevant fields are correct else throw error
 	storedTournament := repo.SaveTournament(testTournament)
 	if storedTournament == nil {
 		context.AbortWithStatus(http.StatusInternalServerError)

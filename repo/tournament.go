@@ -1,9 +1,39 @@
 package repo
 
 import (
+	"fmt"
 	"log"
 	"wc3_game_tracker/api/models"
+	"wc3_game_tracker/repo/entities"
 )
+
+func GetAllTournaments() ([]models.Tournament, error) {
+	db := getOpenConnection()
+
+	var tournamentEntity []entities.TournamentEntity
+
+	err := db.Select(&tournamentEntity, "SELECT * FROM tournament")
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(tournamentEntity)
+
+	tournamentModels := make([]models.Tournament, len(tournamentEntity))
+
+	for i, value := range tournamentEntity {
+		tournamentModels[i] = models.Tournament{
+			Id:              value.Id,
+			Name:            value.Name,
+			StartDate:       models.CustomTime{Time: value.StartDate},
+			EndDate:         models.CustomTime{Time: value.EndDate},
+			Type:            value.Type,
+			MaxParticipants: value.MaxParticipants,
+		}
+	}
+
+	return tournamentModels, nil
+}
 
 func SaveTournament(tournament *models.Tournament) *models.Tournament {
 	db := getOpenConnection()
