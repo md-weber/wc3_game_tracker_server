@@ -2,13 +2,12 @@
 title: Warcraft III Game Tracker
 ---
 erDiagram
-    TOURNAMENT {
+    LEAGUE {
         id UUID
         name string
-        type string
         start_date Date
         end_date Date
-        max_participants int
+        website string
     }
     PARTICIPANT {
         id UUID
@@ -18,41 +17,50 @@ erDiagram
         losses int
         rank int
     }
-    TEAM {
-        id UUID
-        name string
-        member_ids List
-    }
     MATCH {
         id UUID
+        group_id UUID
         participant1_id UUID
         participant2_id UUID
-        match_date Date
-        outcome UUID
     }
-    ROUND {
-        round_id UUID
-        match_ids List
-        round_number string
-    }
-    BRACKET {
+    MATCH_VETO {
         id UUID
-        round_ids List
+        match_id UUID
+        participant_id UUID
+        game_map_id UUID
+    }
+    GAME {
+        id UUID
+        match_id UUID
+        round_number int
+        winning_player_id UUID
+        game_map_id UUID
+        game_date Date
+    }
+    GROUP {
+        id UUID
+        league_id UUID
+        admin string
+        vetos int
+        maps_per_match int
+        status string
     }
     GAME_MAP {
         id UUID
         name string
     }
-    HERO_UNIT {
+    PARTICIPANT_GROUP {
         id UUID
-        name String
+        participant_id UUID
+        group_id UUID
     }
-    PARTICIPANT ||--|{ TEAM : "is part of"
-    PARTICIPANT }|--|{ MATCH : "competes in"
-    TEAM }|--|{ MATCH : "competes in"
-    MATCH ||--|| ROUND : "is part of"
-    ROUND ||--|| BRACKET : "is part of"
-    BRACKET ||--|| TOURNAMENT : "is part of"
-    MATCH ||--|| GAME_MAP : "played on"
-    MATCH ||--|{ HERO_UNIT : "used in"
-    TOURNAMENT ||--|{ PARTICIPANT : "has"
+    PARTICIPANT }|--|| GAME: "compete in"
+    PARTICIPANT }|--|{ PARTICIPANT_GROUP: "belongs to"
+    GROUP }|--|| PARTICIPANT_GROUP: "includes"
+    PARTICIPANT }|--|{ MATCH: "plays in"
+    MATCH ||--|{ GAME: "is part of"
+    GAME }|--|| GAME_MAP: "is played on"
+    MATCH }|--|{ MATCH_VETO: "includes"
+    PARTICIPANT }|--|| MATCH_VETO: "votes for"
+    GAME_MAP }|--|| MATCH_VETO: "is voted for"
+    LEAGUE ||--|{ GROUP: "has"
