@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/google/uuid"
 	"time"
 )
@@ -28,8 +27,6 @@ func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {
 	if err = json.Unmarshal(b, &dateString); err != nil {
 		return err
 	}
-
-	fmt.Println(dateString)
 	date, err := time.Parse(shortForm, dateString)
 	if err != nil {
 		return err

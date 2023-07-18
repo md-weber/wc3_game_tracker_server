@@ -1,6 +1,7 @@
 version: "3.9"
 volumes:
   data:
+  test-data:
 services:
   app:
     ports:
@@ -14,7 +15,7 @@ services:
     links:
       - db
     environment:
-      DATABASE_URL: postgres://local-dev@db/api?sslmode=disable
+      DATABASE_URL: postgres://local-dev@localhost:5432/api?sslmode=disable
       PRODUCTION: false
   db:
     ports:
@@ -22,6 +23,16 @@ services:
     image: postgres:13-alpine
     volumes:
       - data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: api
+      POSTGRES_USER: local-dev
+      POSTGRES_HOST_AUTH_METHOD: trust
+  test-db:
+    ports:
+      - "5433:5432"
+    image: postgres:13-alpine
+    volumes:
+      - test-data:/var/lib/postgresql/test-data
     environment:
       POSTGRES_DB: api
       POSTGRES_USER: local-dev

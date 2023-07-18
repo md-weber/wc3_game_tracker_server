@@ -9,7 +9,7 @@ import (
 
 var openDB *sqlx.DB
 
-func getOpenConnection() *sqlx.DB {
+func GetOpenConnection() *sqlx.DB {
 	if openDB == nil {
 		return openConnectionToDB()
 	}
