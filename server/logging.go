@@ -5,19 +5,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"os"
-	"strconv"
 	"time"
 )
 
 func registerLogger(router *gin.Engine) {
-	prod, err := strconv.ParseBool(os.Getenv("PRODUCTION"))
-	if err != nil {
-		prod = false
-	}
-
 	var logger *zap.Logger
 
-	if prod == true {
+	env := os.Getenv("ENVIRONMENT")
+
+	if env == "prod" {
 		logger, _ = zap.NewProduction()
 	} else {
 		logger, _ = zap.NewDevelopment()

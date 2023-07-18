@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"os"
 	"wc3_game_tracker/api"
 )
 
@@ -10,7 +11,13 @@ func SetupServer() *gin.Engine {
 	router := gin.Default()
 
 	registerLogger(router)
-	router.LoadHTMLGlob("../templates/*")
+	env := os.Getenv("ENVIRONMENT")
+
+	if env == "prod" || env == "dev" {
+		router.LoadHTMLGlob("templates/*")
+	} else {
+		router.LoadHTMLGlob("../templates/*")
+	}
 
 	api.RegisterWebEndpoints(router.Group(""))
 	api.RegisterLeagueEndpoints(router.Group("/api/v1/"))

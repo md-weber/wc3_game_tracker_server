@@ -47,7 +47,7 @@ CREATE TABLE GAME
 
 CREATE TABLE "group"
 (
-    id             uuid,
+    id             uuid DEFAULT public.gen_random_uuid() NOT NULL,
     league_id      uuid,
     admin          text,
     vetos          int,

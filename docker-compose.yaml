@@ -15,8 +15,8 @@ services:
     links:
       - db
     environment:
-      DATABASE_URL: postgres://local-dev@localhost:5432/api?sslmode=disable
-      PRODUCTION: false
+      DATABASE_URL: postgres://local-dev@db/api?sslmode=disable
+      ENVIRONMENT: dev # dev | prod | test
   db:
     ports:
       - "5432:5432"
