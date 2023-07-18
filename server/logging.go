@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func RegisterLogger(router *gin.Engine) {
+func registerLogger(router *gin.Engine) {
 	prod, err := strconv.ParseBool(os.Getenv("PRODUCTION"))
 	if err != nil {
 		prod = false
