@@ -19,33 +19,40 @@ CREATE TABLE PARTICIPANT
     rank         int  DEFAULT 0
 );
 
-CREATE TABLE TEAM
-(
-    id          uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name        text                                  NOT NULL,
-    members_ids uuid[]                                NOT NULL
-);
-
 CREATE TABLE MATCH
 (
     id                 uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    group_id           uuid,
     participant_one_id uuid,
-    participant_two_id uuid,
-    match_date         timestamp,
-    winner_id          uuid
+    participant_two_id uuid
 );
 
-CREATE TABLE ROUND
+CREATE TABLE MATCH_VETO
 (
-    round_id     uuid,
-    match_ids    uuid[],
-    round_number text
+    id             uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    match_id       uuid,
+    participant_id uuid,
+    game_map_id    uuid
 );
 
-CREATE TABLE BRACKET
+CREATE TABLE GAME
 (
-    id        uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    round_ids uuid[]
+    id                uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    match_id          uuid,
+    round_number      int,
+    winning_player_id uuid,
+    game_map_id       uuid,
+    game_date         timestamp
+);
+
+CREATE TABLE "group"
+(
+    id             uuid,
+    league_id      uuid,
+    admin          text,
+    vetos          int,
+    maps_per_match int,
+    status         text
 );
 
 CREATE TABLE GAME_MAP
@@ -54,8 +61,9 @@ CREATE TABLE GAME_MAP
     name text
 );
 
-CREATE TABLE HERO_UNIT
+CREATE TABLE PARTICIPANT_GROUP
 (
-    id   uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name text
+    id             uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    participant_id uuid,
+    group_id       uuid
 )
