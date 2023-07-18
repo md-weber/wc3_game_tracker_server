@@ -1,13 +1,12 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
-CREATE TABLE TOURNAMENT
+CREATE TABLE LEAGUE
 (
-    id               uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name             text                                  NOT NULL,
-    type             text                                  NOT NULL,
-    start_date       date,
-    end_date         date,
-    max_participants int
+    id         uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name       text                                  NOT NULL,
+    start_date date,
+    end_date   date,
+    website    text
 );
 
 CREATE TABLE PARTICIPANT

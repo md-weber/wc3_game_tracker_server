@@ -12,35 +12,35 @@ import (
 	"wc3_game_tracker/api/models"
 )
 
-func TestGetAllTournaments(t *testing.T) {
+func TestGetAllLeagues(t *testing.T) {
 	r := initTesting()
 
-	req, _ := http.NewRequest("GET", "/api/v1/tournaments", nil)
+	req, _ := http.NewRequest("GET", "/api/v1/leagues", nil)
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
-	var result []*models.Tournament
+	var result []*models.League
+
 	responseData, _ := io.ReadAll(w.Body)
 	_ = json.Unmarshal(responseData, &result)
 
-	assert.Equal(t, "Test Tournament", result[0].Name)
-	assert.Equal(t, 12, result[0].MaxParticipants)
+	assert.Equal(t, "Test League", result[0].Name)
+	assert.Equal(t, "https://creepcamp.de/", result[0].Website)
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
-func TestInsertATournamentInDB(t *testing.T) {
+func TestInsertLeagueInDB(t *testing.T) {
 	r := initTesting()
 	m, b := map[string]any{
-		"name":            "Test Tournament",
-		"startDate":       "2023-07-17T07:45:42.914Z",
-		"endDate":         "2023-07-25T07:45:42.914Z",
-		"type":            "No Type",
-		"maxParticipants": 6,
+		"name":      "Test League",
+		"startDate": "2023-07-17T07:45:42.914Z",
+		"endDate":   "2023-07-25T07:45:42.914Z",
+		"website":   "https://creepcamp.de/",
 	}, new(bytes.Buffer)
 
 	_ = json.NewEncoder(b).Encode(m)
 
-	req, _ := http.NewRequest("PUT", "/api/v1/tournament", b)
+	req, _ := http.NewRequest("PUT", "/api/v1/league", b)
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 

@@ -21,7 +21,7 @@ func initTesting() *gin.Engine {
 //goland:noinspection ALL - This is a test only function and should never be called outside
 func cleanDatabase() {
 	db := repo.GetOpenConnection()
-	_, err := db.Exec("DELETE FROM tournament")
+	_, err := db.Exec("DELETE FROM league")
 	if err != nil {
 		return
 	}
@@ -29,13 +29,12 @@ func cleanDatabase() {
 
 func initDatabase() {
 	cleanDatabase()
-	var testTournament = new(models.Tournament)
+	var testLeague = new(models.League)
 
-	testTournament.Name = "Test Tournament"
-	testTournament.Type = "No Type"
-	testTournament.StartDate = models.CustomTime{Time: time.Now()}
-	testTournament.EndDate = models.CustomTime{Time: time.Now()}
-	testTournament.MaxParticipants = 12
+	testLeague.Name = "Test League"
+	testLeague.StartDate = models.CustomTime{Time: time.Now()}
+	testLeague.EndDate = models.CustomTime{Time: time.Now()}
+	testLeague.Website = "https://creepcamp.de/"
 
-	repo.SaveTournament(testTournament)
+	repo.SaveLeague(testLeague)
 }

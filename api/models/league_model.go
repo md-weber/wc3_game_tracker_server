@@ -10,13 +10,12 @@ type CustomTime struct {
 	time.Time
 }
 
-type Tournament struct {
-	Id              uuid.UUID  `json:"id" db:"id"`
-	Name            string     `json:"name" db:"name"`
-	StartDate       CustomTime `json:"startDate" db:"start_date"`
-	EndDate         CustomTime `json:"endDate" db:"end_date"`
-	Type            string     `json:"type" db:"type"`
-	MaxParticipants int        `json:"maxParticipants" db:"max_participants"`
+type League struct {
+	Id        uuid.UUID  `json:"id" db:"id"`
+	Name      string     `json:"name" db:"name"`
+	StartDate CustomTime `json:"startDate" db:"start_date"`
+	EndDate   CustomTime `json:"endDate" db:"end_date"`
+	Website   string     `json:"website" db:"website"`
 }
 
 func (t *CustomTime) UnmarshalJSON(b []byte) (err error) {

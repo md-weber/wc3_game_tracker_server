@@ -13,7 +13,7 @@ func SetupServer() *gin.Engine {
 	router.LoadHTMLGlob("../templates/*")
 
 	api.RegisterWebEndpoints(router.Group(""))
-	api.RegisterTournamentEndpoints(router.Group("/api/v1/"))
+	api.RegisterLeagueEndpoints(router.Group("/api/v1/"))
 	return router
 }
 
