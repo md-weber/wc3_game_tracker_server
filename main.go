@@ -5,11 +5,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"wc3_game_tracker/api"
+	"wc3_game_tracker/server"
 )
 
 func main() {
 	router := gin.Default()
 
+	server.RegisterLogger(router)
 	router.LoadHTMLGlob("templates/*")
 
 	router.GET("/", indexHandler)
