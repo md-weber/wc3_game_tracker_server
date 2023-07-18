@@ -15,6 +15,7 @@ services:
       - db
     environment:
       DATABASE_URL: postgres://local-dev@db/api?sslmode=disable
+      PRODUCTION: false
   db:
     ports:
       - "5432:5432"
