@@ -24,7 +24,8 @@ CREATE TABLE MATCH
     id                 uuid DEFAULT public.gen_random_uuid() NOT NULL,
     group_id           uuid,
     participant_one_id uuid,
-    participant_two_id uuid
+    participant_two_id uuid,
+    replay_url         text
 );
 
 CREATE TABLE MATCH_VETO
@@ -48,6 +49,7 @@ CREATE TABLE GAME
 CREATE TABLE "group"
 (
     id             uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name           text,
     league_id      uuid,
     admin          text,
     vetos          int,

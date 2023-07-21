@@ -6,9 +6,9 @@ PUT {{protocol}}{{host}}:{{port}}/api/v1/league
 Content-Type: application/json
 
 {
-  "name": "Test League",
+  "name": "Creepcamp League",
   "startDate": "2023-07-17T07:45:42.914Z",
   "endDate": "2023-07-25T07:45:42.914Z",
-  "type": "No Type",
-  "maxParticipants": 6
+  "type": "League",
+  "website": "https://creepcamp.de/"
 }

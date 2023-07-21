@@ -22,6 +22,7 @@ erDiagram
         group_id UUID
         participant1_id UUID
         participant2_id UUID
+        replay_url string
     }
     MATCH_VETO {
         id UUID
@@ -39,6 +40,7 @@ erDiagram
     }
     GROUP {
         id UUID
+        name String
         league_id UUID
         admin string
         vetos int
