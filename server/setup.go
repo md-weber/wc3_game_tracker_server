@@ -7,6 +7,8 @@ import (
 	"wc3_game_tracker/api"
 )
 
+const ApiPrefix = "/api/v1/"
+
 func SetupServer() *gin.Engine {
 	router := gin.Default()
 
@@ -20,7 +22,8 @@ func SetupServer() *gin.Engine {
 	}
 
 	api.RegisterWebEndpoints(router.Group(""))
-	api.RegisterLeagueEndpoints(router.Group("/api/v1/"))
+	api.RegisterGroupEndpoints(router.Group(ApiPrefix))
+	api.RegisterLeagueEndpoints(router.Group(ApiPrefix))
 	return router
 }
 

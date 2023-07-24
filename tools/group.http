@@ -1,0 +1,3 @@
+### Get all groups from our database
+
+GET {{protocol}}{{host}}:{{port}}/api/v1/groups
