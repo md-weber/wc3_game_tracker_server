@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"os"
 	"wc3_game_tracker/api"
+	"wc3_game_tracker/repo"
+	"wc3_game_tracker/services"
 )
 
 const ApiPrefix = "/api/v1/"
@@ -21,10 +23,22 @@ func SetupServer() *gin.Engine {
 		router.LoadHTMLGlob("../templates/*")
 	}
 
+	groupApi := registerGroupApi()
+
 	api.RegisterWebEndpoints(router.Group(""))
-	api.RegisterGroupEndpoints(router.Group(ApiPrefix))
+	api.RegisterGroupEndpoints(router.Group(ApiPrefix), groupApi)
 	api.RegisterLeagueEndpoints(router.Group(ApiPrefix))
 	return router
+}
+
+func registerGroupApi() *api.GroupApi {
+	groupApi := new(api.GroupApi)
+	groupService := new(services.GroupService)
+	groupRepo := new(repo.GroupRepository)
+
+	groupService.GroupRepo = groupRepo
+	groupApi.GroupService = groupService
+	return groupApi
 }
 
 func Setup() *gin.Engine {
