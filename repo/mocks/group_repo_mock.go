@@ -13,3 +13,8 @@ func (m *MockGroupRepo) GetAllGroups() ([]models.Group, error) {
 	args := m.Called()
 	return args.Get(0).([]models.Group), args.Error(1)
 }
+
+func (m *MockGroupRepo) SaveGroup(*models.Group) *models.Group {
+	args := m.Called()
+	return args.Get(0).(*models.Group)
+}

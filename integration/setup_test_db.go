@@ -2,6 +2,7 @@ package integration
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"os"
 	"time"
 	"wc3_game_tracker/api/models"
@@ -29,12 +30,24 @@ func cleanDatabase() {
 
 func initDatabase() {
 	cleanDatabase()
-	var testLeague = new(models.League)
 
+	var testLeague = new(models.League)
+	testLeague.Id = uuid.MustParse("5ed90ba3-1ff9-4f40-ac29-c6f5a0ab230b")
 	testLeague.Name = "Test League"
 	testLeague.StartDate = models.CustomTime{Time: time.Now()}
 	testLeague.EndDate = models.CustomTime{Time: time.Now()}
 	testLeague.Website = "https://creepcamp.de/"
 
+	var testGroup = new(models.Group)
+	testGroup.Id = uuid.MustParse("6c75ad7d-6dfa-4f14-8d71-df41fac6fead")
+	testGroup.Name = "Test Group"
+	testGroup.LeagueId = uuid.MustParse("5ed90ba3-1ff9-4f40-ac29-c6f5a0ab230b")
+	testGroup.Admin = "Legolas"
+	testGroup.Vetos = 3
+	testGroup.MapsPerMatch = 3
+	testGroup.Status = "In Progress"
+
+	groupRepo := new(repo.GroupRepository)
+	groupRepo.SaveGroup(testGroup)
 	repo.SaveLeague(testLeague)
 }

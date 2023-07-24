@@ -1,12 +1,14 @@
 package repo
 
 import (
+	"log"
 	"wc3_game_tracker/api/models"
 	"wc3_game_tracker/repo/entities"
 )
 
 type GroupRepoI interface {
 	GetAllGroups() ([]models.Group, error)
+	SaveGroup(*models.Group) *models.Group
 }
 
 type GroupRepository struct {
@@ -37,4 +39,32 @@ func (g GroupRepository) GetAllGroups() ([]models.Group, error) {
 		}
 	}
 	return groupModels, nil
+}
+
+func (g GroupRepository) SaveGroup(group *models.Group) *models.Group {
+	db := GetOpenConnection()
+	tx := db.MustBegin()
+	err := tx.QueryRow("INSERT INTO public.group (id, name, league_id, admin, vetos, maps_per_match, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+		group.Id,
+		group.Name,
+		group.LeagueId,
+		group.Admin,
+		group.Vetos,
+		group.MapsPerMatch,
+		group.Status,
+	).Scan(&group.Id)
+
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+
+	return group
 }
