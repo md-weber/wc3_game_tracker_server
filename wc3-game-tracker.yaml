@@ -1,0 +1,234 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Warcraft III - Game Tracker
+  description: A simple and sample API to make WC3 Leagues data more accessible
+  termsOfService: https://flutter-explained.dev/impressum
+  contact:
+    name: Max Weber
+    url: https://flutter-explained.dev/
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost.swagger.io/api/v1
+paths:
+  /groups:
+    get:
+      description: |
+        This will return all the groups that exist in our current database
+      operationId: findGroups
+      responses:
+        '200':
+          description: All groups currently stored
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: Creates a new Group for a specific League
+      operationId: addGroup
+      requestBody:
+        description: Group that we want to add to the League
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewGroup'
+      responses:
+        '201':
+          description: group response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /groups/{id}:
+    get:
+      description: |
+        Get a group that matches with the id provided
+      operationId: findGroup
+      parameters:
+        - name: id
+          in: path
+          description: ID of group to fetch
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: One specific group
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Group'
+        404:
+          description: There is no group existed to the given ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /leagues:
+    get:
+      description: |
+        This will return all the leagues that exist
+      operationId: findLeagues
+      responses:
+        '200':
+          description: All leagues currently stored
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/League'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: Creates a new League
+      operationId: addLeague
+      requestBody:
+        description: Add this new League
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewLeague'
+      responses:
+        '201':
+          description: league response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/League'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /leagues/{id}:
+    get:
+      description: |
+        Get a league that matches with the id provided
+      operationId: findLeague
+      parameters:
+        - name: id
+          in: path
+          description: ID of league to fetch
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: One specific league
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/League'
+        404:
+          description: There is no league existed to the given ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Group:
+      allOf:
+        - $ref: '#/components/schemas/NewGroup'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              format: uuid
+    NewGroup:
+      type: object
+      properties:
+        name:
+          type: string
+        leagueId:
+          type: string
+          format: uuid
+        admin:
+          type: string
+        vetos:
+          type: integer
+          format: int32
+        mapsPerMatch:
+          type: integer
+          format: int32
+        status:
+          type: string
+          enum: [ In Progress | Finished ]
+    League:
+      allOf:
+        - $ref: '#/components/schemas/NewLeague'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              format: uuid
+    NewLeague:
+      type: object
+      properties:
+        name:
+          type: string
+        startDate:
+          type: string
+          format: 'date-time'
+        endDate:
+          type: string
+          format: 'date-time'
+        website:
+          type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
