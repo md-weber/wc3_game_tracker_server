@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
@@ -10,37 +11,37 @@ import (
 	"wc3_game_tracker/repo"
 )
 
-func allLeaguesHandler(context *gin.Context) {
+func (w Warcraft3ServerImpl) FindLeagues(c *gin.Context) {
 	leagues, err := repo.GetAllLeagues()
 	if err != nil {
-		context.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, err)
 	}
-	context.JSON(http.StatusOK, leagues)
+	c.JSON(http.StatusOK, leagues)
 }
 
-func createNewLeagueHandler(context *gin.Context) {
+func (w Warcraft3ServerImpl) AddLeague(c *gin.Context) {
 	var league *models.League
 
-	jsonData, err := io.ReadAll(context.Request.Body)
+	jsonData, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		context.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithStatus(http.StatusBadRequest)
 		log.Fatal("We cannot read the request body")
 	}
 	err1 := json.Unmarshal(jsonData, &league)
 	if err1 != nil {
-		context.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithStatus(http.StatusBadRequest)
 		log.Fatal("We cannot unmarshall the jsonData", err1)
 	}
 
 	storedLeague := repo.SaveLeague(league)
 	if storedLeague == nil {
-		context.AbortWithStatus(http.StatusInternalServerError)
+		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 
-	context.JSON(http.StatusOK, storedLeague.Id)
+	c.JSON(http.StatusOK, storedLeague.Id)
 }
 
-func RegisterLeagueEndpoints(router *gin.RouterGroup) {
-	router.GET("/leagues", allLeaguesHandler)
-	router.PUT("/league", createNewLeagueHandler)
+func (w Warcraft3ServerImpl) FindLeague(c *gin.Context, id openapi_types.UUID) {
+	//TODO implement me
+	panic("implement me")
 }

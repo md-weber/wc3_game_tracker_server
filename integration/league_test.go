@@ -40,7 +40,7 @@ func TestInsertLeagueInDB(t *testing.T) {
 
 	_ = json.NewEncoder(b).Encode(m)
 
-	req, _ := http.NewRequest("PUT", "/api/v1/league", b)
+	req, _ := http.NewRequest("POST", "/api/v1/leagues", b)
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 

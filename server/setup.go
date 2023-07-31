@@ -5,11 +5,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"os"
 	"wc3_game_tracker/api"
+	"wc3_game_tracker/controller"
 	"wc3_game_tracker/repo"
 	"wc3_game_tracker/services"
 )
 
-const ApiPrefix = "/api/v1/"
+func SetupHandler(r *gin.Engine) {
+	groupRepo := new(repo.GroupRepository)
+	groupService := services.GroupService{GroupRepo: groupRepo}
+	myApi := api.Warcraft3ServerImpl{GroupService: groupService}
+
+	controller.RegisterHandlers(r.Group("/api/v1"), myApi)
+}
 
 func SetupServer() *gin.Engine {
 	router := gin.Default()
@@ -23,27 +30,14 @@ func SetupServer() *gin.Engine {
 		router.LoadHTMLGlob("../templates/*")
 	}
 
-	groupApi := registerGroupApi()
-
 	api.RegisterWebEndpoints(router.Group(""))
-	api.RegisterGroupEndpoints(router.Group(ApiPrefix), groupApi)
-	api.RegisterLeagueEndpoints(router.Group(ApiPrefix))
+	SetupHandler(router)
 	return router
-}
-
-func registerGroupApi() *api.GroupApi {
-	groupApi := new(api.GroupApi)
-	groupService := new(services.GroupService)
-	groupRepo := new(repo.GroupRepository)
-
-	groupService.GroupRepo = groupRepo
-	groupApi.GroupService = groupService
-	return groupApi
 }
 
 func Setup() *gin.Engine {
 	router := SetupServer()
-	err := router.Run("0.0.0.0:3000")
+	err := router.Run(":3000")
 
 	if err != nil {
 		fmt.Println("Server could not be started", err)
