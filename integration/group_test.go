@@ -57,3 +57,20 @@ func TestStoreAGroup(t *testing.T) {
 		t.Error("The given String is not a UUID.", err)
 	}
 }
+
+func TestGetSingleGroup(t *testing.T) {
+	r := initTesting()
+
+	req, _ := http.NewRequest("GET", "/api/v1/groups/6c75ad7d-6dfa-4f14-8d71-df41fac6fead", nil)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	var result *models.Group
+
+	responseData, _ := io.ReadAll(w.Body)
+	_ = json.Unmarshal(responseData, &result)
+
+	assert.Equal(t, 3, result.MapsPerMatch)
+	assert.Equal(t, "Legolas", result.Admin)
+	assert.Equal(t, http.StatusOK, w.Code)
+}

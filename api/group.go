@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"wc3_game_tracker/api/models"
 )
 
@@ -42,8 +43,15 @@ func (w Warcraft3ServerImpl) AddGroup(c *gin.Context) {
 }
 
 func (w Warcraft3ServerImpl) FindGroup(c *gin.Context, id openapi_types.UUID) {
-	//TODO implement me
-	// TODO: Extract the id from the ctx
-	// TODO: Get a single Groups from DB and respond accordingly
-	panic("implement me")
+	group, err := w.GroupService.GetGroup(id)
+
+	if err != nil && strings.Contains(err.Error(), "no rows in result set") {
+		c.JSON(http.StatusNotFound, err)
+	}
+
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, err)
+	}
+	c.JSON(http.StatusOK, group)
 }

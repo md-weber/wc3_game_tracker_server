@@ -10,9 +10,31 @@ import (
 type GroupRepoI interface {
 	GetAllGroups() ([]models.Group, error)
 	SaveGroup(*models.Group) (*models.Group, error)
+	GetGroup(uuid.UUID) (*models.Group, error)
 }
 
 type GroupRepository struct {
+}
+
+func (g GroupRepository) GetGroup(id uuid.UUID) (*models.Group, error) {
+	db := GetOpenConnection()
+	var groupEntity entities.Group
+
+	err := db.Get(&groupEntity, "SELECT * FROM public.group WHERE id = $1", id.String())
+	if err != nil {
+		return nil, err
+	}
+
+	groupModel := new(models.Group)
+	groupModel.Id = groupEntity.Id
+	groupModel.Name = groupEntity.Name
+	groupModel.Admin = groupEntity.Admin
+	groupModel.Vetos = groupEntity.Vetos
+	groupModel.MapsPerMatch = groupEntity.MapsPerMatch
+	groupModel.Status = groupEntity.Status
+	groupModel.LeagueId = groupEntity.LeagueId
+
+	return groupModel, nil
 }
 
 func (g GroupRepository) GetAllGroups() ([]models.Group, error) {
@@ -50,7 +72,7 @@ func (g GroupRepository) SaveGroup(group *models.Group) (*models.Group, error) {
 		group.Id = uuid.New()
 	}
 
-	err := tx.QueryRow("INSERT INTO public.group (id, name, league_id, admin, vetos, maps_per_match, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+	err := tx.QueryRow("INSERT INTO public.group (id, name, league_id, admin, vetos, maps_per_match, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id ",
 		group.Id,
 		group.Name,
 		group.LeagueId,
