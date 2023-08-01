@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"log"
@@ -19,7 +18,6 @@ func GetOpenConnection() *sqlx.DB {
 
 func openConnectionToDB() *sqlx.DB {
 	db, err := sqlx.Connect("postgres", os.Getenv("DATABASE_URL"))
-	fmt.Println(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatalln(err)
 	}
