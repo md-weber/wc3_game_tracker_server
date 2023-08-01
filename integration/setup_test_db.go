@@ -48,6 +48,6 @@ func initDatabase() {
 	testGroup.Status = "In Progress"
 
 	groupRepo := new(repo.GroupRepository)
-	groupRepo.SaveGroup(testGroup)
+	_, _ = groupRepo.SaveGroup(testGroup)
 	repo.SaveLeague(testLeague)
 }

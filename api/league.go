@@ -45,7 +45,7 @@ func (w Warcraft3ServerImpl) AddLeague(c *gin.Context) {
 func (w Warcraft3ServerImpl) FindLeague(c *gin.Context, id openapi_types.UUID) {
 	league, err := repo.GetLeague(id)
 
-	if strings.Contains(err.Error(), "no rows in result set") {
+	if err != nil && strings.Contains(err.Error(), "no rows in result set") {
 		c.JSON(http.StatusNotFound, err)
 	}
 

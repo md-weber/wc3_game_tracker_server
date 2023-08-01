@@ -1,12 +1,14 @@
 package services
 
 import (
+	"github.com/google/uuid"
 	"wc3_game_tracker/api/models"
 	"wc3_game_tracker/repo"
 )
 
 type GroupServiceI interface {
 	GetAllGroups() ([]models.Group, error)
+	SaveGroup(*models.Group) (uuid.UUID, error)
 }
 
 type GroupService struct {
@@ -19,4 +21,9 @@ func (g GroupService) GetAllGroups() ([]models.Group, error) {
 		return nil, err
 	}
 	return groups, nil
+}
+
+func (g GroupService) SaveGroup(group *models.Group) (uuid.UUID, error) {
+	result, err := g.GroupRepo.SaveGroup(group)
+	return result.Id, err
 }
