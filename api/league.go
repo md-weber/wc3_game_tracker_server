@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"wc3_game_tracker/api/models"
 	"wc3_game_tracker/repo"
 )
@@ -42,6 +43,15 @@ func (w Warcraft3ServerImpl) AddLeague(c *gin.Context) {
 }
 
 func (w Warcraft3ServerImpl) FindLeague(c *gin.Context, id openapi_types.UUID) {
-	//TODO implement me
-	panic("implement me")
+	league, err := repo.GetLeague(id)
+
+	if strings.Contains(err.Error(), "no rows in result set") {
+		c.JSON(http.StatusNotFound, err)
+	}
+
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, err)
+	}
+	c.JSON(http.StatusOK, league)
 }

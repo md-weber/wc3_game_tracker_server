@@ -12,3 +12,7 @@ Content-Type: application/json
   "type": "League",
   "website": "https://creepcamp.de/"
 }
+
+### Get a single League from the database
+
+GET {{protocol}}{{host}}:{{port}}/api/v1/leagues/{{leagueId}}

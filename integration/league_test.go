@@ -52,3 +52,30 @@ func TestInsertLeagueInDB(t *testing.T) {
 	}
 
 }
+
+func TestGetSingleLeague(t *testing.T) {
+	r := initTesting()
+
+	req, _ := http.NewRequest("GET", "/api/v1/leagues/5ed90ba3-1ff9-4f40-ac29-c6f5a0ab230b", nil)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	var result *models.League
+
+	responseData, _ := io.ReadAll(w.Body)
+	_ = json.Unmarshal(responseData, &result)
+
+	assert.Equal(t, "Test League", result.Name)
+	assert.Equal(t, "https://creepcamp.de/", result.Website)
+	assert.Equal(t, http.StatusOK, w.Code)
+}
+
+func TestNoValidResourceWithThisId(t *testing.T) {
+	r := initTesting()
+
+	req, _ := http.NewRequest("GET", "/api/v1/leagues/5ed90ba3-1ff9-4f40-ac30-c6f5a0ab230b", nil)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, w.Code, http.StatusNotFound)
+}
